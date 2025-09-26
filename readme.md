@@ -2,7 +2,7 @@
 
 > Personal progress page for CSCI4208. Keep this file updated as you complete labs, projects, and capstone milestones.
 
-- **Name:** <Kyle Lofredo>
+- **Name:** Kyle Lofredo
 - **Project Board (Project v2):** <https://github.com/Enrikkk/Adv_Web_Apps_Project1_HTML-CSS-Game>
 - **Live Portfolio (GitHub Pages):** <https://github.com/chew-Lo/csci4208-portfolio-2025>
 
@@ -103,5 +103,6 @@
 ---
 
 <sub>Last updated: <!-- yyyy-mm-dd --> </sub>
+
 
 
