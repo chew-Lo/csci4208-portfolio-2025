@@ -1,0 +1,28 @@
+# Triple Adventure — Project 01
+
+**Live URL:** https://Enrikkk.github.io/Adv_Web_Apps_Project1_HTML-CSS-Game/  
+**External Repo:** https://github.com/Enrikkk/Adv_Web_Apps_Project1_HTML-CSS-Game
+
+---
+
+## How to Demo
+1. Open the **Live URL** above.  
+2. The game starts at `index.html` with an introduction.  
+3. Navigate using the **choices/buttons** to reach the **courtyard** or **library**.  
+4. Defeat the **Ogre** in the courtyard to continue to the **final boss, the Dragon**.  
+
+---
+
+## Feature Checklist
+- [x] Multi-page HTML/CSS structure  
+- [x] Interactive elements using JavaScript  
+- [x] Assets properly linked (images, audio, GIFs)  
+- [x] Game can be played start-to-finish  
+
+---
+
+## Run Locally
+See the external repo for details:  
+- **Prerequisites / Install** – (https://github.com/Enrikkk/Adv_Web_Apps_Project1_HTML-CSS-Game#-prerequisites)  
+- **Start / Dev** – (https://github.com/Enrikkk/Adv_Web_Apps_Project1_HTML-CSS-Game#-how-to-play)  
+- **Game Info / Paths** – (https://github.com/Enrikkk/Adv_Web_Apps_Project1_HTML-CSS-Game#-character-paths)  
