@@ -5,8 +5,6 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.body.allowGravity = false;
-
         this.body.velocity.x = velocity.x;
         this.body.velocity.y = velocity.y;
     }

@@ -1,12 +1,12 @@
-import * as http from './http.js'                                           
-import * as view from './view.js'                                         
+import * as http from './http.js';
+import * as view from './view.js';
 
-const GET_TRIVIA = 'https://opentdb.com/api.php?amount=1&difficulty=easy';  
-const BIN_ID = '68e4143943b1c97be95cb47a';
+const GET_TRIVIA = 'https://opentdb.com/api.php?amount=1&difficulty=easy';
+const BIN_ID = '69254f1aae596e708f6f5768';
 const GET_LEADERBOARD = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 const PUT_LEADERBOARD = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-const state = {                                                            
+const state = {
     score: 0,
     timer: 20,
     intervalId: null,
@@ -14,50 +14,39 @@ const state = {
     topScores: []
 };
 
-const countdown = () => {                                                   
-    if (state.timer){                                                       
-        state.timer--;                                                      
-        view.PlayScene(state);                                              
-    } else {                                                                
-        clearInterval(state.intervalId);                                    
-        view.GameoverScene(state);                                          
+const countdown = () => {
+    if (state.timer > 0) {
+        state.timer--;
+        view.PlayScene(state);
+    } else {
+        clearInterval(state.intervalId);
+        view.GameoverScene(state);
     }
-}
+};
 
-window.createGame = () => {                                                 
-    state.timer = 20;                                                       
-    state.intervalId = setInterval(countdown, 1000);                        
-    playGame();                                                             
-}
+window.createGame = () => {
+    state.timer = 20;
+    state.intervalId = setInterval(countdown, 1000);
+    playGame();
+};
 
-window.playGame = async () => {                                             
-    const json = await http.sendGETRequest(GET_TRIVIA);                     
-    console.log(json);                                                      
-    [state.trivia] = json.results;                                          
-    view.PlayScene(state);                                                  
-}
+window.playGame = async () => {
+    const json = await http.sendGETRequest(GET_TRIVIA);
+    [state.trivia] = json.results;
+    view.PlayScene(state);
+};
 
-window.start = async () => {                                                
-    const leaderboardJSON = await http.sendGETRequest(GET_LEADERBOARD);     
-    state.topScores = leaderboardJSON.record;                               
-    console.log(state.topScores);                                           
-    state.score = 0;                                                        
-    state.timer = 20;                                                       
-    view.StartMenu(state);                                                  
-}
-window.addEventListener('load', start);                                    
-
-window.checkAnswer = (attempt) => {                                         
-    const answer = state.trivia.correct_answer;                             
-    if (attempt == answer){                                                 
-        state.score += state.timer;                                         
-        state.timer += 10;                                                  
-        playGame();                                                         
-    } else {                                                                
-        clearInterval(state.intervalId);                                    
-        view.GameoverScene(state);                                          
+window.checkAnswer = (attempt) => {
+    const answer = state.trivia.correct_answer;
+    if (attempt === answer) {
+        state.score += state.timer;
+        state.timer += 10;
+        playGame();
+    } else {
+        clearInterval(state.intervalId);
+        view.GameoverScene(state);
     }
-}
+};
 
 const getTop5 = async (newScore) => {
     const leaderboardJSON = await http.sendGETRequest(GET_LEADERBOARD);
@@ -66,12 +55,22 @@ const getTop5 = async (newScore) => {
     top5.sort((a, b) => b.score - a.score);
     top5.pop();
     return top5;
-}
+};
 
-window.updateLeaderboard = async() => {
+window.updateLeaderboard = async () => {
     const name = document.getElementById('name').value;
-    const currentScore = {name: name, score: state.score};
+    const currentScore = { name: name, score: state.score };
     const top5 = await getTop5(currentScore);
     await http.sendPUTRequest(PUT_LEADERBOARD, top5);
     start();
-}
+};
+
+window.start = async () => {
+    const leaderboardJSON = await http.sendGETRequest(GET_LEADERBOARD);
+    state.topScores = leaderboardJSON.record;
+    state.score = 0;
+    state.timer = 20;
+    view.StartMenu(state);
+};
+
+window.addEventListener('load', start);

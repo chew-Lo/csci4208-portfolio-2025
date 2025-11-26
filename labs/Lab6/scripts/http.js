@@ -4,7 +4,7 @@ export const sendGETRequest = async (url) => {
     const response = await fetch(url, options);
     const data = await response.json();
     return data;
-}
+};
 
 export const sendPUTRequest = async (url, data) => {
     const options = new Object();
@@ -13,4 +13,4 @@ export const sendPUTRequest = async (url, data) => {
     options.body = JSON.stringify(data);
     const response = await fetch(url, options);
     return response;
-}
+};

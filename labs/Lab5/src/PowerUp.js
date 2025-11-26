@@ -2,6 +2,7 @@ class PowerUp extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         this.depth = 1;
+        
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.body.velocity.x = -300;
@@ -26,12 +27,11 @@ class SlayPowerUp extends PowerUp {
 }
 
 class ProjectilePowerUp extends PowerUp {
-    constructor(scene, x, y){
+    constructor(scene, x, y) {
         super(scene, x, y, 'powerup-projectile');
     }
 
-    applyEffect(player){
+    applyEffect(player) {
         player.projectileScale = Math.min(player.projectileScale + 1, 3);
     }
 }
-

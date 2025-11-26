@@ -1,15 +1,13 @@
 class TitleScene extends Phaser.Scene {
     constructor() {
-        super('title'); 
+        super('title');
     }
 
     create() {
         this.create_title();
         this.create_game_data();
         this.create_topscore();
-        this.input.keyboard.on('keydown-SPACE', () => { 
-            this.scene.start('play'); 
-        });
+        this.input.keyboard.on('keydown-SPACE', () => { this.scene.start('play'); });
     }
 
     create_title() {
@@ -21,9 +19,9 @@ class TitleScene extends Phaser.Scene {
             fill: '#FFFFFF'
         }).setOrigin(0.5);
 
-        this.add.text(width / 2, height / 2, 'Arrow Keys to move\n Spacebar to Fire', {
+        this.add.text(width / 2, height / 2, 'Arrow Keys to Move\nSpacebar to Fire', {
             fontSize: '24px',
-            fill: "#FFFFFF",
+            fill: '#FFFFFF',
             align: 'center'
         }).setOrigin(0.5);
 
@@ -34,16 +32,16 @@ class TitleScene extends Phaser.Scene {
     }
 
     create_game_data() {
-        this.registry.set('top_score', this.registry.get('top_score') || 100);
+        this.registry.set('top_score', this.registry.get('top_score') || 0);
         this.registry.set('winner', this.registry.get('winner') || 'Top Score');
     }
 
     create_topscore() {
         const topScore = this.registry.get('top_score');
         const winner = this.registry.get('winner');
-        
         const x = this.game.config.width / 2;
         const y = this.game.config.height - 50;
+        
         this.add.text(x, y, `Leader: ${winner} - ${topScore}`, {
             fontSize: '20px',
             fill: '#FFFFFF'

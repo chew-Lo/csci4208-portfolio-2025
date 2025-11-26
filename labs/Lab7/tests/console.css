@@ -1,0 +1,40 @@
+/* tests/console.css */
+.test-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.test-pass {
+    color: green;
+    margin: 0.25rem 0;
+}
+
+.test-fail {
+    color: red;
+    margin: 0.25rem 0;
+}
+
+.test-summary-pass {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+.test-summary-fail {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+.result {
+    font-family: monospace;
+    white-space: pre-wrap;
+}

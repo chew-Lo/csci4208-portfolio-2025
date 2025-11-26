@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock DB Tests - Memory Adapter</title>
+    <link rel="stylesheet" href="../styles/mvp.css">
+    <link rel="stylesheet" href="console.css">
+</head>
+<body>
+    <header>
+        <h1>MockDB Tests - Memory Adapter</h1>
+        <p>Testing basic CRUD operations with in-memory storage</p>
+    </header>
+    <main>
+        <div id="test-results">
+            <h2>Test Results</h2>
+            <div id="boot-tests" class="test-section">
+                <h3>Boot Tests</h3>
+                <div id="boot-result" class="result">Running...</div>
+            </div>
+            <div id="create-tests" class="test-section">
+                <h3>Create Tests</h3>
+                <div id="create-result" class="result">Running...</div>
+            </div>
+            <div id="read-tests" class="test-section">
+                <h3>Read Tests</h3>
+                <div id="read-result" class="result">Running...</div>
+            </div>
+            <div id="update-tests" class="test-section">
+                <h3>Update Tests</h3>
+                <div id="update-result" class="result">Running...</div>
+            </div>
+            <div id="delete-tests" class="test-section">
+                <h3>Delete Tests</h3>
+                <div id="delete-result" class="result">Running...</div>
+            </div>
+        </div>
+    </main>
+    <script type="module">
+        import { useAdapter, boot, insertOne, findMany, findOne, updateOne, deleteOne, getDoc } from '../scripts/db.js';
+        import { memoryAdapter } from '../scripts/adapters/memoryAdapter.js';
+
+        const results = {
+            boot: { passed: 0, total: 0 },
+            create: { passed: 0, total: 0 },
+            read: { passed: 0, total: 0 },
+            update: { passed: 0, total: 0 },
+            delete: { passed: 0, total: 0 }
+        };
+
+        function assert(condition, message, section) {
+            results[section].total++;
+            if (condition) {
+                results[section].passed++;
+                return `<div class="test-pass">✓ ${message}</div>`;
+            } else {
+                return `<div class="test-fail">✗ ${message}</div>`;
+            }
+        }
+
+        async function runTests() {
+            let html = '';
+            
+            // Boot Tests
+            html += '<h4>Boot Tests</h4>';
+            try {
+                useAdapter(memoryAdapter);
+                const doc = await boot();
+                html += assert(doc, 'Boot successful', 'boot');
+                html += assert(doc.users && doc.users.length === 2, 'Seed users exist', 'boot');
+                html += assert(doc.todos && doc.todos.length === 1, 'Todos array present', 'boot');
+            } catch (e) {
+                html += `<div class="test-fail">✗ Boot failed: ${e.message}</div>`;
+            }
+            document.getElementById('boot-result').innerHTML = html;
+
+            // Create Tests
+            html = '<h4>Create Tests</h4>';
+            try {
+                const newUser = await insertOne('users', { name: 'Carol' });
+                html += assert(newUser && newUser.id, 'Insert returns record with id', 'create');
+                
+                const doc = getDoc();
+                html += assert(doc.users.length === 3, 'User count increased', 'create');
+            } catch (e) {
+                html += `<div class="test-fail">✗ Create failed: ${e.message}</div>`;
+            }
+            document.getElementById('create-result').innerHTML = html;
+
+            // Read Tests
+            html = '<h4>Read Tests</h4>';
+            try {
+                const users = findMany('users');
+                html += assert(Array.isArray(users), 'findMany returns array', 'read');
+                
+                const carol = findOne('users', u => u.name === 'Carol');
+                html += assert(carol, 'findOne locates Carol', 'read');
+            } catch (e) {
+                html += `<div class="test-fail">✗ Read failed: ${e.message}</div>`;
+            }
+            document.getElementById('read-result').innerHTML = html;
+
+            // Update Tests
+            html = '<h4>Update Tests</h4>';
+            try {
+                const carol = findOne('users', u => u.name === 'Carol');
+                const result = await updateOne('users', carol.id, { name: 'Caroline' });
+                html += assert(result === 1, 'updateOne returns 1', 'update');
+                
+                const updated = findOne('users', u => u.id === carol.id);
+                html += assert(updated.name === 'Caroline', 'User name updated', 'update');
+            } catch (e) {
+                html += `<div class="test-fail">✗ Update failed: ${e.message}</div>`;
+            }
+            document.getElementById('update-result').innerHTML = html;
+
+            // Delete Tests
+            html = '<h4>Delete Tests</h4>';
+            try {
+                const caroline = findOne('users', u => u.name === 'Caroline');
+                const result = await deleteOne('users', caroline.id);
+                html += assert(result === 1, 'deleteOne returns 1', 'delete');
+                
+                const gone = findOne('users', u => u.name === 'Caroline');
+                html += assert(!gone, 'Record removed', 'delete');
+            } catch (e) {
+                html += `<div class="test-fail">✗ Delete failed: ${e.message}</div>`;
+            }
+            document.getElementById('delete-result').innerHTML = html;
+
+            // Summary
+            const totalPassed = Object.values(results).reduce((sum, r) => sum + r.passed, 0);
+            const totalTests = Object.values(results).reduce((sum, r) => sum + r.total, 0);
+            
+            const summary = document.createElement('div');
+            summary.className = totalPassed === totalTests ? 'test-summary-pass' : 'test-summary-fail';
+            summary.innerHTML = `<h3>Summary: ${totalPassed}/${totalTests} tests passed</h3>`;
+            document.getElementById('test-results').appendChild(summary);
+        }
+
+        runTests();
+    </script>
+</body>
+</html>
